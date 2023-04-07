@@ -4,19 +4,28 @@
         {
             "name": "debug",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "args": [
+                "--dart-define-from-file=dart_defines/secret.json",
+            ]
         },
         {
             "name": "profile",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": [
+                "--dart-define-from-file=dart_defines/secret.json",
+            ]
         },
         {
             "name": "release",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "args": [
+                "--dart-define-from-file=dart_defines/secret.json",
+            ]
         }
     ]
 }

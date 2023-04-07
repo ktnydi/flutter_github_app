@@ -1,16 +1,16 @@
-# github_app
+# Flutter Github App
 
-A new Flutter project.
+Github APIを利用して、認証／認可の仕組みを理解する学習用リポジトリ
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### 1. `dart_defines/secret.json`を作成
 
-A few resources to get you started if this is your first Flutter project:
+必ず以下の形式で作成する。
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```json
+{
+    "clientId": <github_client_id>,
+    "clientSecret": <github_client_secret>
+}
+```
