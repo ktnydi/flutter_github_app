@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../home/home_screen.dart';
+import '../splash/splash_screen.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.blue,
         ),
       ),
-      home: const HomeScreen(title: 'Flutter Demo Home Page'),
+      home: const SplashScreen(),
     );
   }
 }

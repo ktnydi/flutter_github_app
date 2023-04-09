@@ -1,67 +1,129 @@
-import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../model/use_cases/authenticator/sign_in_with_github.dart';
+import '../../../extensions/build_context.dart';
+import '../../../model/repositories/user_repository.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key, required this.title});
-
-  final String title;
-
-  @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _counter = 0;
-
-  void _incrementCounter() async {
-    setState(() {
-      _counter++;
-    });
-
-    try {
-      await ref.read(signInWithGithub)();
-    } on PlatformException catch (error, stack) {
-      debugPrintStack(
-        stackTrace: stack,
-        label: error.toString(),
-      );
-
-      showOkAlertDialog(
-        context: context,
-        title: error.code,
-        message: error.message,
-      );
-    }
-  }
+class HomeScreen extends ConsumerWidget {
+  const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+        title: const Text('プロフィール'),
+        actions: [
+          if (user.value != null)
+            IconButton(
+              onPressed: () async {
+                final url = user.value!.htmlUrl;
+                if (await canLaunchUrlString(url)) {
+                  launchUrlString(url);
+                }
+              },
+              icon: const Icon(Icons.launch_outlined),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      body: user.when(
+        data: (data) {
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Material(
+                      shape: const CircleBorder(),
+                      clipBehavior: Clip.antiAlias,
+                      child: CachedNetworkImage(
+                        imageUrl: data!.avatarUrl,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${data.name}',
+                            style: context.textTheme.titleLarge!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textHeightBehavior: const TextHeightBehavior(
+                              applyHeightToFirstAscent: false,
+                            ),
+                          ),
+                          Text(
+                            data.login,
+                            style: context.textTheme.bodyMedium,
+                          ),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                const TextSpan(
+                                  text: 'フォロー',
+                                ),
+                                const WidgetSpan(
+                                  child: SizedBox(width: 4),
+                                ),
+                                TextSpan(
+                                  text: '${data.following}',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const WidgetSpan(
+                                  child: SizedBox(width: 8),
+                                ),
+                                const TextSpan(
+                                  text: 'フォロワー',
+                                ),
+                                const WidgetSpan(
+                                  child: SizedBox(width: 4),
+                                ),
+                                TextSpan(
+                                  text: '${data.followers}',
+                                  style: context.textTheme.bodyMedium!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          if (data.bio != null)
+                            Text(
+                              data.bio!,
+                              style: context.textTheme.bodyMedium,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const Divider(height: 32),
+              ],
+            ),
+          );
+        },
+        error: (error, stack) {
+          return const SizedBox();
+        },
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
