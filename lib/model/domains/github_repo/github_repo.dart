@@ -18,9 +18,9 @@ class GithubRepo with _$GithubRepo {
     required int stargazersCount,
     required int watchersCount,
     required int openIssuesCount,
-    @DateTimeStringConverter() required DateTime pushedAt,
-    @DateTimeStringConverter() required DateTime createdAt,
-    @DateTimeStringConverter() required DateTime updatedAt,
+    @DateTimeStringConverter() DateTime? pushedAt,
+    @DateTimeStringConverter() DateTime? createdAt,
+    @DateTimeStringConverter() DateTime? updatedAt,
   }) = _GithubRepo;
 
   factory GithubRepo.fromJson(Map<String, dynamic> json) =>

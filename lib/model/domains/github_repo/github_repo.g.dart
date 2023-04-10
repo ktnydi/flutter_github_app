@@ -17,12 +17,12 @@ _$_GithubRepo _$$_GithubRepoFromJson(Map<String, dynamic> json) =>
       stargazersCount: json['stargazers_count'] as int,
       watchersCount: json['watchers_count'] as int,
       openIssuesCount: json['open_issues_count'] as int,
-      pushedAt:
-          const DateTimeStringConverter().fromJson(json['pushed_at'] as String),
-      createdAt: const DateTimeStringConverter()
-          .fromJson(json['created_at'] as String),
-      updatedAt: const DateTimeStringConverter()
-          .fromJson(json['updated_at'] as String),
+      pushedAt: _$JsonConverterFromJson<String, DateTime>(
+          json['pushed_at'], const DateTimeStringConverter().fromJson),
+      createdAt: _$JsonConverterFromJson<String, DateTime>(
+          json['created_at'], const DateTimeStringConverter().fromJson),
+      updatedAt: _$JsonConverterFromJson<String, DateTime>(
+          json['updated_at'], const DateTimeStringConverter().fromJson),
     );
 
 Map<String, dynamic> _$$_GithubRepoToJson(_$_GithubRepo instance) =>
@@ -36,7 +36,22 @@ Map<String, dynamic> _$$_GithubRepoToJson(_$_GithubRepo instance) =>
       'stargazers_count': instance.stargazersCount,
       'watchers_count': instance.watchersCount,
       'open_issues_count': instance.openIssuesCount,
-      'pushed_at': const DateTimeStringConverter().toJson(instance.pushedAt),
-      'created_at': const DateTimeStringConverter().toJson(instance.createdAt),
-      'updated_at': const DateTimeStringConverter().toJson(instance.updatedAt),
+      'pushed_at': _$JsonConverterToJson<String, DateTime>(
+          instance.pushedAt, const DateTimeStringConverter().toJson),
+      'created_at': _$JsonConverterToJson<String, DateTime>(
+          instance.createdAt, const DateTimeStringConverter().toJson),
+      'updated_at': _$JsonConverterToJson<String, DateTime>(
+          instance.updatedAt, const DateTimeStringConverter().toJson),
     };
+
+Value? _$JsonConverterFromJson<Json, Value>(
+  Object? json,
+  Value? Function(Json json) fromJson,
+) =>
+    json == null ? null : fromJson(json as Json);
+
+Json? _$JsonConverterToJson<Json, Value>(
+  Value? value,
+  Json? Function(Value value) toJson,
+) =>
+    value == null ? null : toJson(value);

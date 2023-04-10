@@ -30,11 +30,11 @@ mixin _$GithubRepo {
   int get watchersCount => throw _privateConstructorUsedError;
   int get openIssuesCount => throw _privateConstructorUsedError;
   @DateTimeStringConverter()
-  DateTime get pushedAt => throw _privateConstructorUsedError;
+  DateTime? get pushedAt => throw _privateConstructorUsedError;
   @DateTimeStringConverter()
-  DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get createdAt => throw _privateConstructorUsedError;
   @DateTimeStringConverter()
-  DateTime get updatedAt => throw _privateConstructorUsedError;
+  DateTime? get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -58,9 +58,9 @@ abstract class $GithubRepoCopyWith<$Res> {
       int stargazersCount,
       int watchersCount,
       int openIssuesCount,
-      @DateTimeStringConverter() DateTime pushedAt,
-      @DateTimeStringConverter() DateTime createdAt,
-      @DateTimeStringConverter() DateTime updatedAt});
+      @DateTimeStringConverter() DateTime? pushedAt,
+      @DateTimeStringConverter() DateTime? createdAt,
+      @DateTimeStringConverter() DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -85,9 +85,9 @@ class _$GithubRepoCopyWithImpl<$Res, $Val extends GithubRepo>
     Object? stargazersCount = null,
     Object? watchersCount = null,
     Object? openIssuesCount = null,
-    Object? pushedAt = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? pushedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -126,18 +126,18 @@ class _$GithubRepoCopyWithImpl<$Res, $Val extends GithubRepo>
           ? _value.openIssuesCount
           : openIssuesCount // ignore: cast_nullable_to_non_nullable
               as int,
-      pushedAt: null == pushedAt
+      pushedAt: freezed == pushedAt
           ? _value.pushedAt
           : pushedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
+              as DateTime?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -160,9 +160,9 @@ abstract class _$$_GithubRepoCopyWith<$Res>
       int stargazersCount,
       int watchersCount,
       int openIssuesCount,
-      @DateTimeStringConverter() DateTime pushedAt,
-      @DateTimeStringConverter() DateTime createdAt,
-      @DateTimeStringConverter() DateTime updatedAt});
+      @DateTimeStringConverter() DateTime? pushedAt,
+      @DateTimeStringConverter() DateTime? createdAt,
+      @DateTimeStringConverter() DateTime? updatedAt});
 }
 
 /// @nodoc
@@ -185,9 +185,9 @@ class __$$_GithubRepoCopyWithImpl<$Res>
     Object? stargazersCount = null,
     Object? watchersCount = null,
     Object? openIssuesCount = null,
-    Object? pushedAt = null,
-    Object? createdAt = null,
-    Object? updatedAt = null,
+    Object? pushedAt = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$_GithubRepo(
       id: null == id
@@ -226,18 +226,18 @@ class __$$_GithubRepoCopyWithImpl<$Res>
           ? _value.openIssuesCount
           : openIssuesCount // ignore: cast_nullable_to_non_nullable
               as int,
-      pushedAt: null == pushedAt
+      pushedAt: freezed == pushedAt
           ? _value.pushedAt
           : pushedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      createdAt: null == createdAt
+              as DateTime?,
+      createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      updatedAt: null == updatedAt
+              as DateTime?,
+      updatedAt: freezed == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+              as DateTime?,
     ));
   }
 }
@@ -256,9 +256,9 @@ class _$_GithubRepo implements _GithubRepo {
       required this.stargazersCount,
       required this.watchersCount,
       required this.openIssuesCount,
-      @DateTimeStringConverter() required this.pushedAt,
-      @DateTimeStringConverter() required this.createdAt,
-      @DateTimeStringConverter() required this.updatedAt});
+      @DateTimeStringConverter() this.pushedAt,
+      @DateTimeStringConverter() this.createdAt,
+      @DateTimeStringConverter() this.updatedAt});
 
   factory _$_GithubRepo.fromJson(Map<String, dynamic> json) =>
       _$$_GithubRepoFromJson(json);
@@ -283,13 +283,13 @@ class _$_GithubRepo implements _GithubRepo {
   final int openIssuesCount;
   @override
   @DateTimeStringConverter()
-  final DateTime pushedAt;
+  final DateTime? pushedAt;
   @override
   @DateTimeStringConverter()
-  final DateTime createdAt;
+  final DateTime? createdAt;
   @override
   @DateTimeStringConverter()
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   @override
   String toString() {
@@ -357,19 +357,18 @@ class _$_GithubRepo implements _GithubRepo {
 
 abstract class _GithubRepo implements GithubRepo {
   const factory _GithubRepo(
-          {required final int id,
-          required final String name,
-          required final String htmlUrl,
-          final String? description,
-          final String? language,
-          required final int forksCount,
-          required final int stargazersCount,
-          required final int watchersCount,
-          required final int openIssuesCount,
-          @DateTimeStringConverter() required final DateTime pushedAt,
-          @DateTimeStringConverter() required final DateTime createdAt,
-          @DateTimeStringConverter() required final DateTime updatedAt}) =
-      _$_GithubRepo;
+      {required final int id,
+      required final String name,
+      required final String htmlUrl,
+      final String? description,
+      final String? language,
+      required final int forksCount,
+      required final int stargazersCount,
+      required final int watchersCount,
+      required final int openIssuesCount,
+      @DateTimeStringConverter() final DateTime? pushedAt,
+      @DateTimeStringConverter() final DateTime? createdAt,
+      @DateTimeStringConverter() final DateTime? updatedAt}) = _$_GithubRepo;
 
   factory _GithubRepo.fromJson(Map<String, dynamic> json) =
       _$_GithubRepo.fromJson;
@@ -394,13 +393,13 @@ abstract class _GithubRepo implements GithubRepo {
   int get openIssuesCount;
   @override
   @DateTimeStringConverter()
-  DateTime get pushedAt;
+  DateTime? get pushedAt;
   @override
   @DateTimeStringConverter()
-  DateTime get createdAt;
+  DateTime? get createdAt;
   @override
   @DateTimeStringConverter()
-  DateTime get updatedAt;
+  DateTime? get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$_GithubRepoCopyWith<_$_GithubRepo> get copyWith =>
