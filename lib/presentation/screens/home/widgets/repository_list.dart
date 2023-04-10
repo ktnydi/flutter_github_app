@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'segment_actions.dart';
 import '../../../../extensions/date_time.dart';
 import '../../../../model/use_cases/profile_repo/fetch_profile_repositories.dart';
+import '../../../../model/use_cases/profile_repo/fetch_starred_repositories.dart';
+
+final fetchUserGitHubRepositories = Provider((ref) {
+  final segmentAction = ref.watch(segmentActionProvider);
+
+  if (segmentAction == SegmentAction.star) {
+    return ref.watch(fetchStarredRepositoriesProvider);
+  } else {
+    return ref.watch(fetchProfileRepositoriesProvider);
+  }
+});
 
 class RepositoryList extends ConsumerWidget {
   const RepositoryList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositories = ref.watch(fetchProfileRepositoriesProvider);
+    final repositories = ref.watch(fetchUserGitHubRepositories);
 
     return repositories.when(
       data: (data) {
@@ -40,12 +52,14 @@ class RepositoryList extends ConsumerWidget {
                               child: SizedBox(width: 8),
                             ),
                           ],
-                          TextSpan(
-                            text: repository.updatedAt.yMd(addHm: true),
-                          ),
-                          const WidgetSpan(
-                            child: SizedBox(width: 8),
-                          ),
+                          if (repository.updatedAt != null) ...[
+                            TextSpan(
+                              text: repository.updatedAt!.yMd(addHm: true),
+                            ),
+                            const WidgetSpan(
+                              child: SizedBox(width: 8),
+                            ),
+                          ],
                           TextSpan(
                             text: repository.description,
                           ),

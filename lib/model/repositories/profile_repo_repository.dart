@@ -43,4 +43,30 @@ class ProfileRepoRepository {
     final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
     return repositories.toList();
   }
+
+  Future<List<GithubRepo>> fetchStarredRepositories() async {
+    final response = await _dio.getUri<List<dynamic>>(
+      Uri.https(
+        'api.github.com',
+        '/user/starred',
+        {
+          'sort': 'created',
+        },
+      ),
+      options: Options(
+        headers: {
+          'Accept': 'aplication/vnd.github+json',
+          'Authorization': 'Bearer $accessToken',
+          'X-Github-Api-Version': '2022-11-28',
+        },
+      ),
+    );
+
+    final jsonMap = response.data;
+
+    if (jsonMap == null) return [];
+
+    final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
+    return repositories.toList();
+  }
 }
