@@ -1,9 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../extensions/build_context.dart';
+import 'widgets/repository_list.dart';
+import 'widgets/segment_actions.dart';
+import 'widgets/user_profile.dart';
 import '../../../model/repositories/user_repository.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -31,89 +32,20 @@ class HomeScreen extends ConsumerWidget {
       ),
       body: user.when(
         data: (data) {
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Material(
-                      shape: const CircleBorder(),
-                      clipBehavior: Clip.antiAlias,
-                      child: CachedNetworkImage(
-                        imageUrl: data!.avatarUrl,
-                        width: 80,
-                        height: 80,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${data.name}',
-                            style: context.textTheme.titleLarge!.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textHeightBehavior: const TextHeightBehavior(
-                              applyHeightToFirstAscent: false,
-                            ),
-                          ),
-                          Text(
-                            data.login,
-                            style: context.textTheme.bodyMedium,
-                          ),
-                          Text.rich(
-                            TextSpan(
-                              children: [
-                                const TextSpan(
-                                  text: 'フォロー',
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 4),
-                                ),
-                                TextSpan(
-                                  text: '${data.following}',
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 8),
-                                ),
-                                const TextSpan(
-                                  text: 'フォロワー',
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 4),
-                                ),
-                                TextSpan(
-                                  text: '${data.followers}',
-                                  style: context.textTheme.bodyMedium!.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          if (data.bio != null)
-                            Text(
-                              data.bio!,
-                              style: context.textTheme.bodyMedium,
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const Divider(height: 32),
-              ],
-            ),
+          return CustomScrollView(
+            slivers: [
+              ProviderScope(
+                overrides: [
+                  userProfileProvider.overrideWithValue(data!),
+                ],
+                child: const UserProfile(),
+              ),
+              const SliverToBoxAdapter(
+                child: Divider(height: 1),
+              ),
+              const FilterAction(),
+              const RepositoryList(),
+            ],
           );
         },
         error: (error, stack) {
