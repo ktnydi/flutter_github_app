@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../model/use_cases/profile_repo/search_repositories.dart';
+
 final _searchFieldController = Provider.autoDispose((ref) {
   final controller = TextEditingController();
 
@@ -27,6 +29,7 @@ class SearchField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchFieldController = ref.watch(_searchFieldController);
+    final searchKeywordNotifier = ref.watch(searchKeywordProvider.notifier);
     final hasText = ref.watch(_hasText);
 
     return TextFormField(
@@ -46,7 +49,9 @@ class SearchField extends ConsumerWidget {
             : null,
       ),
       onFieldSubmitted: (value) {
-        // TODO: キーワードを含むリポジトリを検索する
+        if (value.trim().isEmpty) return;
+
+        searchKeywordNotifier.state = value.trim();
       },
     );
   }

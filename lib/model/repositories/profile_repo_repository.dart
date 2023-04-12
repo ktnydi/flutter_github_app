@@ -69,4 +69,30 @@ class ProfileRepoRepository {
     final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
     return repositories.toList();
   }
+
+  Future<List<GithubRepo>> searchRepositories({required String query}) async {
+    final response = await _dio.getUri<Map<String, dynamic>>(
+      Uri.https(
+        'api.github.com',
+        '/search/repositories',
+        {
+          'q': query,
+        },
+      ),
+      options: Options(
+        headers: {
+          'Accept': 'aplication/vnd.github+json',
+          'Authorization': 'Bearer $accessToken',
+          'X-Github-Api-Version': '2022-11-28',
+        },
+      ),
+    );
+
+    final jsonMap = response.data!['items'] as List<dynamic>?;
+
+    if (jsonMap == null) return [];
+
+    final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
+    return repositories.toList();
+  }
 }
