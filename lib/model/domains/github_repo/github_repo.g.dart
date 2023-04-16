@@ -17,6 +17,7 @@ _$_GithubRepo _$$_GithubRepoFromJson(Map<String, dynamic> json) =>
       stargazersCount: json['stargazers_count'] as int,
       watchersCount: json['watchers_count'] as int,
       openIssuesCount: json['open_issues_count'] as int,
+      owner: Owner.fromJson(json['owner'] as Map<String, dynamic>),
       pushedAt: _$JsonConverterFromJson<String, DateTime>(
           json['pushed_at'], const DateTimeStringConverter().fromJson),
       createdAt: _$JsonConverterFromJson<String, DateTime>(
@@ -36,6 +37,7 @@ Map<String, dynamic> _$$_GithubRepoToJson(_$_GithubRepo instance) =>
       'stargazers_count': instance.stargazersCount,
       'watchers_count': instance.watchersCount,
       'open_issues_count': instance.openIssuesCount,
+      'owner': instance.owner,
       'pushed_at': _$JsonConverterToJson<String, DateTime>(
           instance.pushedAt, const DateTimeStringConverter().toJson),
       'created_at': _$JsonConverterToJson<String, DateTime>(

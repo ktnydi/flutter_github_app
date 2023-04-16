@@ -29,6 +29,7 @@ mixin _$GithubRepo {
   int get stargazersCount => throw _privateConstructorUsedError;
   int get watchersCount => throw _privateConstructorUsedError;
   int get openIssuesCount => throw _privateConstructorUsedError;
+  Owner get owner => throw _privateConstructorUsedError;
   @DateTimeStringConverter()
   DateTime? get pushedAt => throw _privateConstructorUsedError;
   @DateTimeStringConverter()
@@ -58,9 +59,12 @@ abstract class $GithubRepoCopyWith<$Res> {
       int stargazersCount,
       int watchersCount,
       int openIssuesCount,
+      Owner owner,
       @DateTimeStringConverter() DateTime? pushedAt,
       @DateTimeStringConverter() DateTime? createdAt,
       @DateTimeStringConverter() DateTime? updatedAt});
+
+  $OwnerCopyWith<$Res> get owner;
 }
 
 /// @nodoc
@@ -85,6 +89,7 @@ class _$GithubRepoCopyWithImpl<$Res, $Val extends GithubRepo>
     Object? stargazersCount = null,
     Object? watchersCount = null,
     Object? openIssuesCount = null,
+    Object? owner = null,
     Object? pushedAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -126,6 +131,10 @@ class _$GithubRepoCopyWithImpl<$Res, $Val extends GithubRepo>
           ? _value.openIssuesCount
           : openIssuesCount // ignore: cast_nullable_to_non_nullable
               as int,
+      owner: null == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as Owner,
       pushedAt: freezed == pushedAt
           ? _value.pushedAt
           : pushedAt // ignore: cast_nullable_to_non_nullable
@@ -139,6 +148,14 @@ class _$GithubRepoCopyWithImpl<$Res, $Val extends GithubRepo>
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $OwnerCopyWith<$Res> get owner {
+    return $OwnerCopyWith<$Res>(_value.owner, (value) {
+      return _then(_value.copyWith(owner: value) as $Val);
+    });
   }
 }
 
@@ -160,9 +177,13 @@ abstract class _$$_GithubRepoCopyWith<$Res>
       int stargazersCount,
       int watchersCount,
       int openIssuesCount,
+      Owner owner,
       @DateTimeStringConverter() DateTime? pushedAt,
       @DateTimeStringConverter() DateTime? createdAt,
       @DateTimeStringConverter() DateTime? updatedAt});
+
+  @override
+  $OwnerCopyWith<$Res> get owner;
 }
 
 /// @nodoc
@@ -185,6 +206,7 @@ class __$$_GithubRepoCopyWithImpl<$Res>
     Object? stargazersCount = null,
     Object? watchersCount = null,
     Object? openIssuesCount = null,
+    Object? owner = null,
     Object? pushedAt = freezed,
     Object? createdAt = freezed,
     Object? updatedAt = freezed,
@@ -226,6 +248,10 @@ class __$$_GithubRepoCopyWithImpl<$Res>
           ? _value.openIssuesCount
           : openIssuesCount // ignore: cast_nullable_to_non_nullable
               as int,
+      owner: null == owner
+          ? _value.owner
+          : owner // ignore: cast_nullable_to_non_nullable
+              as Owner,
       pushedAt: freezed == pushedAt
           ? _value.pushedAt
           : pushedAt // ignore: cast_nullable_to_non_nullable
@@ -256,6 +282,7 @@ class _$_GithubRepo implements _GithubRepo {
       required this.stargazersCount,
       required this.watchersCount,
       required this.openIssuesCount,
+      required this.owner,
       @DateTimeStringConverter() this.pushedAt,
       @DateTimeStringConverter() this.createdAt,
       @DateTimeStringConverter() this.updatedAt});
@@ -282,6 +309,8 @@ class _$_GithubRepo implements _GithubRepo {
   @override
   final int openIssuesCount;
   @override
+  final Owner owner;
+  @override
   @DateTimeStringConverter()
   final DateTime? pushedAt;
   @override
@@ -293,7 +322,7 @@ class _$_GithubRepo implements _GithubRepo {
 
   @override
   String toString() {
-    return 'GithubRepo(id: $id, name: $name, htmlUrl: $htmlUrl, description: $description, language: $language, forksCount: $forksCount, stargazersCount: $stargazersCount, watchersCount: $watchersCount, openIssuesCount: $openIssuesCount, pushedAt: $pushedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'GithubRepo(id: $id, name: $name, htmlUrl: $htmlUrl, description: $description, language: $language, forksCount: $forksCount, stargazersCount: $stargazersCount, watchersCount: $watchersCount, openIssuesCount: $openIssuesCount, owner: $owner, pushedAt: $pushedAt, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -316,6 +345,7 @@ class _$_GithubRepo implements _GithubRepo {
                 other.watchersCount == watchersCount) &&
             (identical(other.openIssuesCount, openIssuesCount) ||
                 other.openIssuesCount == openIssuesCount) &&
+            (identical(other.owner, owner) || other.owner == owner) &&
             (identical(other.pushedAt, pushedAt) ||
                 other.pushedAt == pushedAt) &&
             (identical(other.createdAt, createdAt) ||
@@ -337,6 +367,7 @@ class _$_GithubRepo implements _GithubRepo {
       stargazersCount,
       watchersCount,
       openIssuesCount,
+      owner,
       pushedAt,
       createdAt,
       updatedAt);
@@ -366,6 +397,7 @@ abstract class _GithubRepo implements GithubRepo {
       required final int stargazersCount,
       required final int watchersCount,
       required final int openIssuesCount,
+      required final Owner owner,
       @DateTimeStringConverter() final DateTime? pushedAt,
       @DateTimeStringConverter() final DateTime? createdAt,
       @DateTimeStringConverter() final DateTime? updatedAt}) = _$_GithubRepo;
@@ -391,6 +423,8 @@ abstract class _GithubRepo implements GithubRepo {
   int get watchersCount;
   @override
   int get openIssuesCount;
+  @override
+  Owner get owner;
   @override
   @DateTimeStringConverter()
   DateTime? get pushedAt;

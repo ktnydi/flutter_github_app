@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:github_app/model/domains/owner/owner.dart';
 
 import '../json_converters/date_time_string_converter.dart';
 
@@ -18,6 +19,7 @@ class GithubRepo with _$GithubRepo {
     required int stargazersCount,
     required int watchersCount,
     required int openIssuesCount,
+    required Owner owner,
     @DateTimeStringConverter() DateTime? pushedAt,
     @DateTimeStringConverter() DateTime? createdAt,
     @DateTimeStringConverter() DateTime? updatedAt,
