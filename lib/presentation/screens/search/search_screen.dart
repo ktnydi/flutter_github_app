@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/presentation/screens/repository/repository_screen.dart';
 
 import '../../../extensions/date_time.dart';
 import '../../../model/use_cases/profile_repo/search_repositories.dart';
@@ -38,6 +39,15 @@ class SearchRepositoriesScreen extends ConsumerWidget {
                       final repository = data[index];
 
                       return ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  RepositoryScreen(id: repository.id),
+                            ),
+                          );
+                        },
                         title: Text(repository.name),
                         subtitle: Text.rich(
                           maxLines: 1,
