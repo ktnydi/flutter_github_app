@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-
-import 'widgets/repository_list.dart';
-import 'widgets/segment_actions.dart';
+import 'package:github_app/presentation/screens/user_repository_list/user_repository_list_screen.dart';
 import 'widgets/user_profile.dart';
 import '../../../model/repositories/user_repository.dart';
 
@@ -15,37 +12,79 @@ class HomeScreen extends ConsumerWidget {
     final user = ref.watch(userProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('プロフィール'),
-        actions: [
-          if (user.value != null)
-            IconButton(
-              onPressed: () async {
-                final url = user.value!.htmlUrl;
-                if (await canLaunchUrlString(url)) {
-                  launchUrlString(url);
-                }
-              },
-              icon: const Icon(Icons.launch_outlined),
-            ),
-        ],
-      ),
       body: user.when(
         data: (data) {
-          return CustomScrollView(
-            slivers: [
-              ProviderScope(
-                overrides: [
-                  userProfileProvider.overrideWithValue(data!),
+          return SingleChildScrollView(
+            child: SafeArea(
+              child: Column(
+                children: [
+                  ProviderScope(
+                    overrides: [
+                      userProfileProvider.overrideWithValue(data!),
+                    ],
+                    child: const UserProfile(),
+                  ),
+                  const Divider(
+                    height: 1,
+                    indent: 16,
+                    endIndent: 16,
+                  ),
+                  const SizedBox(height: 12),
+                  ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const UserRepositoryListScreen(
+                            repositoryType: SegmentAction.public,
+                          ),
+                        ),
+                      );
+                    },
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.blueGrey,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.book_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    title: const Text('リポジトリ'),
+                    trailing: const Icon(Icons.navigate_next),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const UserRepositoryListScreen(
+                            repositoryType: SegmentAction.star,
+                          ),
+                        ),
+                      );
+                    },
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(
+                        Icons.star_outline,
+                        color: Colors.white,
+                      ),
+                    ),
+                    title: const Text('スター'),
+                    trailing: const Icon(Icons.navigate_next),
+                  ),
                 ],
-                child: const UserProfile(),
               ),
-              const SliverToBoxAdapter(
-                child: Divider(height: 1),
-              ),
-              const FilterAction(),
-              const RepositoryList(),
-            ],
+            ),
           );
         },
         error: (error, stack) {

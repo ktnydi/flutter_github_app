@@ -1,33 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/extensions/date_time.dart';
 
-import 'segment_actions.dart';
-import '../../../../extensions/date_time.dart';
-import '../../../../model/use_cases/profile_repo/fetch_profile_repositories.dart';
-import '../../../../model/use_cases/profile_repo/fetch_starred_repositories.dart';
+import '../../../model/domains/github_repo/github_repo.dart';
+import '../../../model/use_cases/profile_repo/fetch_profile_repositories.dart';
+import '../../../model/use_cases/profile_repo/fetch_starred_repositories.dart';
 
-final fetchUserGitHubRepositories = Provider((ref) {
-  final segmentAction = ref.watch(segmentActionProvider);
+enum SegmentAction {
+  public(label: 'リポジトリ'),
+  star(label: 'スター'),
+  ;
 
-  if (segmentAction == SegmentAction.star) {
-    return ref.watch(fetchStarredRepositoriesProvider);
-  } else {
-    return ref.watch(fetchProfileRepositoriesProvider);
-  }
-});
+  const SegmentAction({required this.label});
 
-class RepositoryList extends ConsumerWidget {
-  const RepositoryList({super.key});
+  final String label;
+}
+
+final fetchUserGitHubRepositories =
+    Provider.family<AsyncValue<List<GithubRepo>?>, SegmentAction>(
+  (ref, action) {
+    if (action == SegmentAction.star) {
+      return ref.watch(fetchStarredRepositoriesProvider);
+    } else {
+      return ref.watch(fetchProfileRepositoriesProvider);
+    }
+  },
+);
+
+class UserRepositoryListScreen extends ConsumerWidget {
+  const UserRepositoryListScreen({
+    super.key,
+    required this.repositoryType,
+  });
+
+  final SegmentAction repositoryType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositories = ref.watch(fetchUserGitHubRepositories);
+    final repositories = ref.watch(fetchUserGitHubRepositories(repositoryType));
 
-    return repositories.when(
-      data: (data) {
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(repositoryType.label),
+      ),
+      body: repositories.when(
+        data: (data) {
+          return ListView.builder(
+            itemBuilder: (context, index) {
               final repository = data[index];
 
               return Column(
@@ -70,24 +89,20 @@ class RepositoryList extends ConsumerWidget {
                 ],
               );
             },
-            childCount: data!.length,
-          ),
-        );
-      },
-      error: (error, stack) {
-        return const SliverFillRemaining(
-          child: Center(
+            itemCount: data!.length,
+          );
+        },
+        error: (error, stack) {
+          return const Center(
             child: Icon(Icons.error_outline),
-          ),
-        );
-      },
-      loading: () {
-        return const SliverFillRemaining(
-          child: Center(
+          );
+        },
+        loading: () {
+          return const Center(
             child: CircularProgressIndicator(),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
