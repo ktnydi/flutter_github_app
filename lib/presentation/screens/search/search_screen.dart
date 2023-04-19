@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/presentation/screens/repository/repository_screen.dart';
+import 'package:github_app/presentation/widgets/repository_tile.dart';
 
-import '../../../extensions/date_time.dart';
 import '../../../model/use_cases/profile_repo/search_repositories.dart';
 import 'widgets/search_field.dart';
 
@@ -38,7 +38,7 @@ class SearchRepositoriesScreen extends ConsumerWidget {
                     itemBuilder: (context, index) {
                       final repository = data[index];
 
-                      return ListTile(
+                      return RepositoryTile(
                         onTap: () {
                           Navigator.push(
                             context,
@@ -48,32 +48,7 @@ class SearchRepositoriesScreen extends ConsumerWidget {
                             ),
                           );
                         },
-                        title: Text(repository.name),
-                        subtitle: Text.rich(
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          TextSpan(
-                            children: [
-                              if (repository.language != null) ...[
-                                TextSpan(text: repository.language!),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 8),
-                                ),
-                              ],
-                              if (repository.updatedAt != null) ...[
-                                TextSpan(
-                                  text: repository.updatedAt!.yMd(addHm: true),
-                                ),
-                                const WidgetSpan(
-                                  child: SizedBox(width: 8),
-                                ),
-                              ],
-                              TextSpan(
-                                text: repository.description,
-                              ),
-                            ],
-                          ),
-                        ),
+                        repository: repository,
                       );
                     },
                     separatorBuilder: (_, __) => const Divider(
