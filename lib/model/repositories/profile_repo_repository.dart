@@ -70,13 +70,19 @@ class ProfileRepoRepository {
     return repositories.toList();
   }
 
-  Future<List<GithubRepo>> searchRepositories({required String query}) async {
+  Future<List<GithubRepo>> searchRepositories({
+    required String query,
+    int page = 1,
+    int perPage = 30,
+  }) async {
     final response = await _dio.getUri<Map<String, dynamic>>(
       Uri.https(
         'api.github.com',
         '/search/repositories',
         {
           'q': query,
+          'page': '$page',
+          'per_page': '$perPage',
         },
       ),
       options: Options(

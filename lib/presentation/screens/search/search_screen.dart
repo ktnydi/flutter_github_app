@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
+import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
 import 'package:github_app/presentation/screens/repository/repository_screen.dart';
 import 'package:github_app/presentation/widgets/repository_tile.dart';
 
-import '../../../model/use_cases/profile_repo/search_repositories.dart';
 import 'widgets/search_field.dart';
+
+final scrollController = Provider((ref) {
+  final controller = ScrollController();
+
+  controller.addListener(() {
+    if (controller.position.maxScrollExtent == controller.offset) {
+      ref.read(searchRepoProvider.notifier).fetchNextItems();
+    }
+  });
+
+  return controller;
+});
 
 class SearchRepositoriesScreen extends ConsumerWidget {
   const SearchRepositoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchResult = ref.watch(searchRepositories);
-    final searchKeywordState = ref.watch(searchKeywordProvider);
+    final searchResult = ref.watch(searchRepoProvider);
+    final searchKeywordState = ref.watch(searchRepoQueryProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -38,26 +50,38 @@ class SearchRepositoriesScreen extends ConsumerWidget {
             );
           }
 
-          if (data!.isEmpty) {
+          if (data.items.isEmpty) {
             return const Center(
               child: Text('一致する結果が見つかりませんでした。'),
             );
           }
 
           return ListView.separated(
+            controller: ref.watch(scrollController),
             itemBuilder: (context, index) {
-              final repository = data[index];
+              if (index != data.items.length) {
+                final repository = data.items[index];
 
-              return RepositoryTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => RepositoryScreen(id: repository.id),
-                    ),
-                  );
-                },
-                repository: repository,
+                return RepositoryTile(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            RepositoryScreen(id: repository.id),
+                      ),
+                    );
+                  },
+                  repository: repository,
+                );
+              }
+
+              return Container(
+                height: 100,
+                alignment: Alignment.center,
+                child: data.hasNext
+                    ? const CircularProgressIndicator()
+                    : const SizedBox(),
               );
             },
             separatorBuilder: (_, __) => const Divider(
@@ -65,7 +89,7 @@ class SearchRepositoriesScreen extends ConsumerWidget {
               indent: 16,
               endIndent: 16,
             ),
-            itemCount: data.length,
+            itemCount: data.items.length + 1,
           );
         },
         error: (error, stack) {

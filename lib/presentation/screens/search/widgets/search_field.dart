@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
-
-import '../../../../model/use_cases/profile_repo/search_repositories.dart';
+import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
 
 final _searchFieldController = Provider.autoDispose((ref) {
   final controller = TextEditingController();
@@ -30,7 +29,7 @@ class SearchField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchFieldController = ref.watch(_searchFieldController);
-    final searchKeywordNotifier = ref.watch(searchKeywordProvider.notifier);
+    final searchKeywordNotifier = ref.watch(searchRepoQueryProvider.notifier);
     final focusNode = ref.watch(_focusNode);
 
     return Material(
