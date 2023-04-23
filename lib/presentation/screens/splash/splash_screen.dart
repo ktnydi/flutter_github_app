@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../auth/auth_screen.dart';
 import '../bottom_navigator/bottom_navigator_screen.dart';
-import '../../../proverder/shared_preferences_provider.dart';
+import '../../../provider/shared_preferences_provider.dart';
 
 class SplashScreen extends ConsumerWidget {
   const SplashScreen({super.key});

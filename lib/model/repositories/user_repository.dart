@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domains/user/user.dart';
-import '../../proverder/shared_preferences_provider.dart';
+import '../../provider/shared_preferences_provider.dart';
 
 final userProvider = FutureProvider((ref) async {
   final userRepository = ref.watch(userRepositoryProvider);

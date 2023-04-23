@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domains/github_repo/github_repo.dart';
-import '../../proverder/shared_preferences_provider.dart';
+import '../../provider/shared_preferences_provider.dart';
 
 final profileRepoRepositoryProvider = Provider((ref) {
   final prefs = ref.watch(sharedPreferencesProvider);
