@@ -18,13 +18,18 @@ class ProfileRepoRepository {
   final String accessToken;
   final _dio = Dio();
 
-  Future<List<GithubRepo>> fetchProfileRepositories() async {
+  Future<List<GithubRepo>> fetchProfileRepositories({
+    required int page,
+    required int perPage,
+  }) async {
     final response = await _dio.getUri<List<dynamic>>(
       Uri.https(
         'api.github.com',
         '/user/repos',
         {
           'sort': 'pushed',
+          'page': '$page',
+          'per_page': '$perPage',
         },
       ),
       options: Options(
@@ -44,13 +49,18 @@ class ProfileRepoRepository {
     return repositories.toList();
   }
 
-  Future<List<GithubRepo>> fetchStarredRepositories() async {
+  Future<List<GithubRepo>> fetchStarredRepositories({
+    required int page,
+    required int perPage,
+  }) async {
     final response = await _dio.getUri<List<dynamic>>(
       Uri.https(
         'api.github.com',
         '/user/starred',
         {
           'sort': 'created',
+          'page': '$page',
+          'per_page': '$perPage',
         },
       ),
       options: Options(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/model/repositories/profile_repo_repository.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../model/domains/github_repo/github_repo.dart';
-import '../../../model/use_cases/profile_repo/fetch_profile_repositories.dart';
-import '../../../model/use_cases/profile_repo/fetch_starred_repositories.dart';
 import '../../widgets/repository_tile.dart';
 
 enum SegmentAction {
@@ -17,13 +17,55 @@ enum SegmentAction {
   final String label;
 }
 
-final fetchUserGitHubRepositories =
-    Provider.family<AsyncValue<List<GithubRepo>?>, SegmentAction>(
+final userRepoPagingController = Provider.autoDispose((ref) {
+  final controller = PagingController<int, GithubRepo>(firstPageKey: 1);
+  controller.addPageRequestListener((pageKey) async {
+    final repository = ref.read(profileRepoRepositoryProvider);
+    final items = await repository!.fetchProfileRepositories(
+      page: pageKey,
+      perPage: 30,
+    );
+    final isLastPage = items.length < 30;
+    if (isLastPage) {
+      controller.appendLastPage(items);
+    } else {
+      controller.appendPage(items, pageKey + 1);
+    }
+  });
+
+  ref.onDispose(() => controller.dispose());
+
+  return controller;
+});
+
+final starRepoPagingController = Provider.autoDispose((ref) {
+  final controller = PagingController<int, GithubRepo>(firstPageKey: 1);
+  controller.addPageRequestListener((pageKey) async {
+    final repository = ref.read(profileRepoRepositoryProvider);
+    final items = await repository!.fetchStarredRepositories(
+      page: pageKey,
+      perPage: 30,
+    );
+    final isLastPage = items.length < 30;
+    if (isLastPage) {
+      controller.appendLastPage(items);
+    } else {
+      controller.appendPage(items, pageKey + 1);
+    }
+  });
+
+  ref.onDispose(() => controller.dispose());
+
+  return controller;
+});
+
+final pagingController = Provider.autoDispose
+    .family<PagingController<int, GithubRepo>, SegmentAction>(
   (ref, action) {
     if (action == SegmentAction.star) {
-      return ref.watch(fetchStarredRepositoriesProvider);
+      return ref.watch(starRepoPagingController);
     } else {
-      return ref.watch(fetchProfileRepositoriesProvider);
+      return ref.watch(userRepoPagingController);
     }
   },
 );
@@ -38,43 +80,29 @@ class UserRepositoryListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final repositories = ref.watch(fetchUserGitHubRepositories(repositoryType));
-
     return Scaffold(
       appBar: AppBar(
         title: Text(repositoryType.label),
       ),
-      body: repositories.when(
-        data: (data) {
-          return ListView.separated(
-            separatorBuilder: (context, index) => const Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
-            itemBuilder: (context, index) {
-              final repository = data[index];
+      body: PagedListView<int, GithubRepo>.separated(
+        pagingController: ref.watch(pagingController(repositoryType)),
+        separatorBuilder: (context, index) => const Divider(
+          height: 1,
+          indent: 16,
+          endIndent: 16,
+        ),
+        builderDelegate: PagedChildBuilderDelegate<GithubRepo>(
+          itemBuilder: (context, item, index) {
+            final repository = item;
 
-              return RepositoryTile(
-                onTap: () {
-                  launchUrl(Uri.parse(repository.htmlUrl));
-                },
-                repository: repository,
-              );
-            },
-            itemCount: data!.length,
-          );
-        },
-        error: (error, stack) {
-          return const Center(
-            child: Icon(Icons.error_outline),
-          );
-        },
-        loading: () {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        },
+            return RepositoryTile(
+              onTap: () {
+                launchUrl(Uri.parse(repository.htmlUrl));
+              },
+              repository: repository,
+            );
+          },
+        ),
       ),
     );
   }
