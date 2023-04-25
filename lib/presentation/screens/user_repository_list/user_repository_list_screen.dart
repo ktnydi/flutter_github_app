@@ -20,16 +20,25 @@ enum SegmentAction {
 final userRepoPagingController = Provider.autoDispose((ref) {
   final controller = PagingController<int, GithubRepo>(firstPageKey: 1);
   controller.addPageRequestListener((pageKey) async {
-    final repository = ref.read(profileRepoRepositoryProvider);
-    final items = await repository!.fetchProfileRepositories(
-      page: pageKey,
-      perPage: 30,
-    );
-    final isLastPage = items.length < 30;
-    if (isLastPage) {
-      controller.appendLastPage(items);
-    } else {
-      controller.appendPage(items, pageKey + 1);
+    try {
+      final repository = ref.read(profileRepoRepositoryProvider);
+      final items = await repository!.fetchProfileRepositories(
+        page: pageKey,
+        perPage: 30,
+      );
+      final isLastPage = items.length < 30;
+      if (isLastPage) {
+        controller.appendLastPage(items);
+      } else {
+        controller.appendPage(items, pageKey + 1);
+      }
+    } on Exception catch (error, stack) {
+      controller.error = error;
+
+      debugPrintStack(
+        label: error.toString(),
+        stackTrace: stack,
+      );
     }
   });
 
@@ -59,7 +68,7 @@ final starRepoPagingController = Provider.autoDispose((ref) {
   return controller;
 });
 
-final pagingController = Provider.autoDispose
+final pagingControllerProvider = Provider.autoDispose
     .family<PagingController<int, GithubRepo>, SegmentAction>(
   (ref, action) {
     if (action == SegmentAction.star) {
@@ -80,12 +89,15 @@ class UserRepositoryListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pagingController =
+        ref.watch(pagingControllerProvider(repositoryType));
+
     return Scaffold(
       appBar: AppBar(
         title: Text(repositoryType.label),
       ),
       body: PagedListView<int, GithubRepo>.separated(
-        pagingController: ref.watch(pagingController(repositoryType)),
+        pagingController: pagingController,
         separatorBuilder: (context, index) => const Divider(
           height: 1,
           indent: 16,
@@ -100,6 +112,35 @@ class UserRepositoryListScreen extends ConsumerWidget {
                 launchUrl(Uri.parse(repository.htmlUrl));
               },
               repository: repository,
+            );
+          },
+          noItemsFoundIndicatorBuilder: (context) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+              child: const Text(
+                'リポジトリが見つかりませんでした。',
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+          firstPageErrorIndicatorBuilder: (context) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              alignment: Alignment.center,
+              child: const Text(
+                'エラーが発生しました。しばらくしてから再度お試しください。',
+                textAlign: TextAlign.center,
+              ),
+            );
+          },
+          newPageErrorIndicatorBuilder: (context) {
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'エラーが発生したため、リポジトリを取得できませんでした。',
+                textAlign: TextAlign.center,
+              ),
             );
           },
         ),
