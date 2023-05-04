@@ -26,6 +26,8 @@ class SearchRepositoriesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchResult = ref.watch(searchRepoProvider);
     final searchKeywordState = ref.watch(searchRepoQueryProvider);
+    final sortKeyState = ref.watch(searchSortKeyProvider);
+    final sortKeyNotifier = ref.watch(searchSortKeyProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(
@@ -56,40 +58,74 @@ class SearchRepositoriesScreen extends ConsumerWidget {
             );
           }
 
-          return ListView.separated(
+          return CustomScrollView(
             controller: ref.watch(scrollController),
-            itemBuilder: (context, index) {
-              if (index != data.items.length) {
-                final repository = data.items[index];
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: Row(
+                    children: SortKey.values.map((e) {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 16),
+                        child: FilterChip(
+                          label: Text(e.label),
+                          selected: sortKeyState == e,
+                          onSelected: (bool value) {
+                            sortKeyNotifier.state = e;
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 16),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    if (index != data.items.length) {
+                      final repository = data.items[index];
 
-                return RepositoryTile(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            RepositoryScreen(id: repository.id),
-                      ),
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          if (index != 0 && index != data.items.length - 1)
+                            const Divider(
+                              height: 1,
+                              indent: 16,
+                              endIndent: 16,
+                            ),
+                          RepositoryTile(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RepositoryScreen(id: repository.id),
+                                ),
+                              );
+                            },
+                            repository: repository,
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Container(
+                      height: 100,
+                      alignment: Alignment.center,
+                      child: data.hasNext
+                          ? const CircularProgressIndicator()
+                          : const SizedBox(),
                     );
                   },
-                  repository: repository,
-                );
-              }
-
-              return Container(
-                height: 100,
-                alignment: Alignment.center,
-                child: data.hasNext
-                    ? const CircularProgressIndicator()
-                    : const SizedBox(),
-              );
-            },
-            separatorBuilder: (_, __) => const Divider(
-              height: 1,
-              indent: 16,
-              endIndent: 16,
-            ),
-            itemCount: data.items.length + 1,
+                  childCount: data.items.length + 1,
+                ),
+              ),
+            ],
           );
         },
         error: (error, stack) {

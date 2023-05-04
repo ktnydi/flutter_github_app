@@ -84,6 +84,7 @@ class ProfileRepoRepository {
     required String query,
     int page = 1,
     int perPage = 30,
+    String sort = '',
   }) async {
     final response = await _dio.getUri<Map<String, dynamic>>(
       Uri.https(
@@ -91,6 +92,7 @@ class ProfileRepoRepository {
         '/search/repositories',
         {
           'q': query,
+          'sort': sort,
           'page': '$page',
           'per_page': '$perPage',
         },
