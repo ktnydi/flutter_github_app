@@ -1,6 +1,9 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/presentation/screens/auth/auth_screen.dart';
 import 'package:github_app/presentation/screens/user_repository_list/user_repository_list_screen.dart';
+import '../../../model/use_cases/authenticator/sign_out.dart';
 import 'widgets/user_profile.dart';
 import '../../../model/repositories/user_repository.dart';
 
@@ -11,7 +14,37 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider);
 
+    Future<void> logout() async {
+      final result = await showOkCancelAlertDialog(
+        context: context,
+        title: 'サインアウトしますか？',
+      );
+
+      if (result == OkCancelResult.cancel) return;
+
+      await ref.read(signOut)();
+
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AuthScreen(),
+        ),
+        (route) => false,
+      );
+    }
+
     return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: logout,
+            icon: const Icon(Icons.logout_outlined),
+          ),
+        ],
+      ),
       body: user.when(
         data: (data) {
           return SingleChildScrollView(
