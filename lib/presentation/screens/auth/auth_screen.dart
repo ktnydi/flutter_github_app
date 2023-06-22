@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../home/home_screen.dart';
 import '../../../extensions/build_context.dart';
 import '../../../model/use_cases/authenticator/sign_in_with_github.dart';
+import '../bottom_navigator/bottom_navigator_screen.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -22,7 +22,7 @@ class AuthScreen extends ConsumerWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
+            builder: (context) => const BottomNavigatorScreen(),
           ),
         );
       } on PlatformException catch (error, stack) {
