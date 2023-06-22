@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/presentation/screens/search/search_screen.dart';
 
 import '../auth/auth_screen.dart';
-import '../bottom_navigator/bottom_navigator_screen.dart';
 import '../../../provider/shared_preferences_provider.dart';
 
 class SplashScreen extends ConsumerWidget {
@@ -14,7 +14,7 @@ class SplashScreen extends ConsumerWidget {
         ref.watch(sharedPreferencesProvider).getString('accessToken');
 
     if (accessToken != null) {
-      return const BottomNavigatorScreen();
+      return const SearchRepositoriesScreen();
     } else {
       return const AuthScreen();
     }

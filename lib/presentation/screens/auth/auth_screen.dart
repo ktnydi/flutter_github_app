@@ -2,10 +2,10 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/presentation/screens/search/search_screen.dart';
 
 import '../../../extensions/build_context.dart';
 import '../../../model/use_cases/authenticator/sign_in_with_github.dart';
-import '../bottom_navigator/bottom_navigator_screen.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -22,7 +22,7 @@ class AuthScreen extends ConsumerWidget {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const BottomNavigatorScreen(),
+            builder: (context) => const SearchRepositoriesScreen(),
           ),
         );
       } on PlatformException catch (error, stack) {
