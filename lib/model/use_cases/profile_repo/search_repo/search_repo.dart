@@ -2,8 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/model/repositories/profile_repo_repository.dart';
 import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo_state.dart';
 
-final searchRepoQueryProvider = StateProvider((ref) => '');
-final searchSortKeyProvider = StateProvider<SortKey>((ref) => SortKey.related);
+final searchRepoQueryProvider = StateProvider.autoDispose((ref) => '');
+final searchSortKeyProvider =
+    StateProvider.autoDispose<SortKey>((ref) => SortKey.related);
 
 enum SortKey {
   related(query: '', label: '関連度'),
