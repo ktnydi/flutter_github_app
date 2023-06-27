@@ -35,15 +35,26 @@ class RepositoryTile extends StatelessWidget {
                     Row(
                       children: [
                         Material(
-                          shape: const CircleBorder(),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              repository.owner.isOrganization ? 4 : 1000,
+                            ),
+                            side: BorderSide(
+                              width: 1,
+                              color: context.colorScheme.surfaceVariant,
+                            ),
+                          ),
                           clipBehavior: Clip.antiAlias,
-                          child: CachedNetworkImage(
-                            imageUrl: repository.owner.avatarUrl,
-                            placeholder: (context, url) {
-                              return const CircularProgressIndicator();
-                            },
-                            width: 36,
-                            height: 36,
+                          child: Padding(
+                            padding: const EdgeInsets.all(1),
+                            child: CachedNetworkImage(
+                              imageUrl: repository.owner.avatarUrl,
+                              placeholder: (context, url) {
+                                return const CircularProgressIndicator();
+                              },
+                              width: 36,
+                              height: 36,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
