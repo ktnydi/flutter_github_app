@@ -15,49 +15,69 @@ class Header extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            children: [
-              Material(
-                shape: CircleBorder(
-                  side: BorderSide(
-                    color: Theme.of(context).dividerColor,
-                  ),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: CachedNetworkImage(
-                  imageUrl: repository.owner.avatarUrl,
-                  placeholder: (context, url) {
-                    return const CircularProgressIndicator();
-                  },
-                  errorWidget: (context, url, error) {
-                    return Ink(
-                      color: context.colorScheme.surfaceVariant,
-                      child: Icon(
-                        Icons.broken_image_outlined,
-                        size: 32,
-                        color: context.colorScheme.onSurfaceVariant,
-                      ),
-                    );
-                  },
-                  width: 40,
-                  height: 40,
-                  fit: BoxFit.cover,
-                ),
+          Material(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                repository.owner.isOrganization ? 24 : 1000,
               ),
-              const SizedBox(width: 16),
-              Text(repository.owner.login),
-            ],
+              side: BorderSide(
+                width: 1,
+                color: context.colorScheme.surfaceVariant,
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            // 周囲に枠線の幅だけ余白を設けて画像が枠線に被らないようにする。
+            child: Padding(
+              padding: const EdgeInsets.all(1),
+              child: CachedNetworkImage(
+                imageUrl: repository.owner.avatarUrl,
+                placeholder: (context, url) {
+                  return const CircularProgressIndicator();
+                },
+                errorWidget: (context, url, error) {
+                  return Ink(
+                    color: context.colorScheme.surfaceVariant,
+                    child: Icon(
+                      Icons.broken_image_outlined,
+                      size: 32,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
+                  );
+                },
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
           const SizedBox(height: 16),
-          Text(
-            repository.name,
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: repository.owner.login,
+                ),
+                const TextSpan(text: '/'),
+                TextSpan(
+                  text: repository.name,
+                  style: context.textTheme.titleLarge!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
             style: context.textTheme.titleLarge,
+            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 8),
-          if (repository.description != null) Text(repository.description!),
+          if (repository.description != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              repository.description!,
+              textAlign: TextAlign.center,
+            ),
+          ],
         ],
       ),
     );
