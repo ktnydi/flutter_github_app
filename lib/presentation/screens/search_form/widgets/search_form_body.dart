@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
@@ -26,7 +25,6 @@ class SearchFormBody extends ConsumerWidget {
     final searchResult = ref.watch(searchRepoProvider);
     final searchKeywordState = ref.watch(searchRepoQueryProvider);
     final sortKeyState = ref.watch(searchSortKeyProvider);
-    final sortKeyNotifier = ref.watch(searchSortKeyProvider.notifier);
 
     if (searchKeywordState.isEmpty) {
       return const SizedBox();
@@ -60,82 +58,77 @@ class SearchFormBody extends ConsumerWidget {
           );
         }
 
-        return Column(
-          mainAxisSize: MainAxisSize.min,
+        return Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: SortKey.values.map((e) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: FilterChip(
-                      showCheckmark: false,
-                      label: Text(e.label),
-                      selected: sortKeyState == e,
-                      onSelected: (bool value) {
-                        HapticFeedback.lightImpact();
-                        sortKeyNotifier.state = e;
-                      },
-                      side: BorderSide(
-                        color: sortKeyState == e
-                            ? Colors.transparent
-                            : context.colorScheme.surfaceVariant,
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: CustomScrollView(
-                controller: ref.watch(scrollController),
-                slivers: [
-                  SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        if (index != data.items.length) {
-                          final repository = data.items[index];
+            CustomScrollView(
+              controller: ref.watch(scrollController),
+              slivers: [
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      if (index != data.items.length) {
+                        final repository = data.items[index];
 
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (index != 0 && index != data.items.length - 1)
-                                const Divider(
-                                  height: 1,
-                                  indent: 16,
-                                  endIndent: 16,
-                                ),
-                              RepositoryTile(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RepositoryScreen(
-                                        id: repository.id,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                repository: repository,
+                        return Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (index != 0)
+                              const Divider(
+                                height: 1,
+                                indent: 16,
+                                endIndent: 16,
                               ),
-                            ],
-                          );
-                        }
-
-                        return Container(
-                          height: 100,
-                          alignment: Alignment.center,
-                          child: data.hasNext
-                              ? const CircularProgressIndicator()
-                              : const SizedBox(),
+                            RepositoryTile(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RepositoryScreen(
+                                      id: repository.id,
+                                    ),
+                                  ),
+                                );
+                              },
+                              repository: repository,
+                            ),
+                          ],
                         );
-                      },
-                      childCount: data.items.length + 1,
+                      }
+
+                      return Container(
+                        height: 100,
+                        alignment: Alignment.center,
+                        child: data.hasNext
+                            ? const CircularProgressIndicator()
+                            : const SizedBox(),
+                      );
+                    },
+                    childCount: data.items.length + 1,
+                  ),
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: MediaQuery.of(context).padding.bottom + 16,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: context.colorScheme.inverseSurface.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    '`${sortKeyState.label}`順で表示中',
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: context.colorScheme.onInverseSurface,
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ],

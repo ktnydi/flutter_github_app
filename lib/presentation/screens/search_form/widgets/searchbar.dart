@@ -1,3 +1,4 @@
+import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
@@ -34,6 +35,7 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
     final queryNotifier = ref.watch(searchRepoQueryProvider.notifier);
     final searchController = ref.watch(_searchbarController);
     final focusNode = ref.watch(_focusNode);
+    final sortKeyNotifier = ref.watch(searchSortKeyProvider.notifier);
 
     return Padding(
       padding: EdgeInsets.only(
@@ -46,55 +48,90 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
           children: [
             Expanded(
               child: Material(
+                color: context.colorScheme.surfaceVariant,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
                 clipBehavior: Clip.antiAlias,
-                child: TextFormField(
-                  controller: searchController,
-                  focusNode: focusNode,
-                  autofocus: true,
-                  textAlignVertical: TextAlignVertical.center,
-                  style: context.textTheme.bodyLarge,
-                  strutStyle: StrutStyle.fromTextStyle(
-                    context.textTheme.bodyLarge!,
-                    forceStrutHeight: true,
-                  ),
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    filled: true,
-                    isDense: true,
-                    hintText: 'GitHub内のリポジトリを検索',
-                    suffixIconConstraints: visualDensity.effectiveConstraints(
-                      const BoxConstraints(
-                        minWidth: 0,
-                        minHeight: kMinInteractiveDimension,
-                      ),
-                    ),
-                    suffixIcon: ValueListenableBuilder(
-                      valueListenable: searchController,
-                      builder: (context, value, child) {
-                        if (value.text.isEmpty) {
-                          return const SizedBox();
-                        }
+                child: IntrinsicHeight(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: searchController,
+                          focusNode: focusNode,
+                          autofocus: true,
+                          textAlignVertical: TextAlignVertical.center,
+                          style: context.textTheme.bodyLarge,
+                          strutStyle: StrutStyle.fromTextStyle(
+                            context.textTheme.bodyLarge!,
+                            forceStrutHeight: true,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            filled: true,
+                            isDense: true,
+                            hintText: 'GitHub内のリポジトリを検索',
+                            suffixIconConstraints:
+                                visualDensity.effectiveConstraints(
+                              const BoxConstraints(
+                                minWidth: 0,
+                                minHeight: kMinInteractiveDimension,
+                              ),
+                            ),
+                            suffixIcon: ValueListenableBuilder(
+                              valueListenable: searchController,
+                              builder: (context, value, child) {
+                                if (value.text.isEmpty) {
+                                  return const SizedBox();
+                                }
 
-                        return IconButton(
-                          onPressed: () {
-                            searchController.clear();
-                            focusNode.requestFocus();
+                                return IconButton(
+                                  onPressed: () {
+                                    searchController.clear();
+                                    focusNode.requestFocus();
+                                  },
+                                  icon: const Icon(Icons.cancel),
+                                  visualDensity: VisualDensity.compact,
+                                  color: context.colorScheme.primary,
+                                );
+                              },
+                            ),
+                          ),
+                          onFieldSubmitted: (value) {
+                            if (value.isEmpty) return;
+
+                            queryNotifier.state = value;
                           },
-                          icon: const Icon(Icons.cancel),
-                          visualDensity: VisualDensity.compact,
-                          color: context.colorScheme.primary,
-                        );
-                      },
-                    ),
-                  ),
-                  onFieldSubmitted: (value) {
-                    if (value.isEmpty) return;
+                        ),
+                      ),
+                      const VerticalDivider(
+                        width: 1,
+                        indent: 8,
+                        endIndent: 8,
+                      ),
+                      IconButton(
+                        onPressed: () async {
+                          final result = await showModalActionSheet(
+                            context: context,
+                            title: 'ソート方法',
+                            actions: SortKey.values.map((e) {
+                              return SheetAction(
+                                key: e,
+                                label: e.label,
+                              );
+                            }).toList(),
+                          );
 
-                    queryNotifier.state = value;
-                  },
+                          if (result == null) return;
+
+                          sortKeyNotifier.state = result;
+                        },
+                        icon: const Icon(Icons.sort_outlined),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -107,8 +144,9 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
                 shape: const BeveledRectangleBorder(),
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(0, 40),
+                textStyle: context.textTheme.bodyLarge,
               ),
-              child: const Text('キャンセル'),
+              child: const Text('閉じる'),
             ),
           ],
         ),
