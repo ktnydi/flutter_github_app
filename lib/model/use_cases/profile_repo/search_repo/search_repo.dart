@@ -47,7 +47,7 @@ class SearchRepoNotifier extends StateNotifier<AsyncValue<SearchRepoState>> {
         );
         return SearchRepoState(
           items: result,
-          hasNext: result.length == perPage,
+          hasNext: result.value.length == perPage,
         );
       });
     }();
@@ -75,8 +75,10 @@ class SearchRepoNotifier extends StateNotifier<AsyncValue<SearchRepoState>> {
         page: value.page + 1,
       );
       return SearchRepoState(
-        items: [...value.items, ...result],
-        hasNext: result.length == perPage,
+        items: value.items.copyWith(
+          value: [...value.items.value, ...result.value],
+        ),
+        hasNext: result.value.length == perPage,
         page: value.page + 1,
       );
     });

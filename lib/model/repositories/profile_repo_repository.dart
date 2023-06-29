@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:github_app/model/domains/github_repositories/github_repositories.dart';
 
 import '../domains/github_repo/github_repo.dart';
 import '../../provider/shared_preferences_provider.dart';
@@ -80,7 +81,7 @@ class ProfileRepoRepository {
     return repositories.toList();
   }
 
-  Future<List<GithubRepo>> searchRepositories({
+  Future<GithubRepositories> searchRepositories({
     required String query,
     int page = 1,
     int perPage = 30,
@@ -108,9 +109,12 @@ class ProfileRepoRepository {
 
     final jsonMap = response.data!['items'] as List<dynamic>?;
 
-    if (jsonMap == null) return [];
+    if (jsonMap == null) return const GithubRepositories();
 
     final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
-    return repositories.toList();
+    return GithubRepositories(
+      value: repositories.toList(),
+      totalCount: response.data!['total_count'] as int? ?? 0,
+    );
   }
 }

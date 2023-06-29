@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SearchRepoState {
-  List<GithubRepo> get items => throw _privateConstructorUsedError;
+  GithubRepositories get items => throw _privateConstructorUsedError;
   bool get hasNext => throw _privateConstructorUsedError;
   int get page => throw _privateConstructorUsedError;
 
@@ -31,7 +31,9 @@ abstract class $SearchRepoStateCopyWith<$Res> {
           SearchRepoState value, $Res Function(SearchRepoState) then) =
       _$SearchRepoStateCopyWithImpl<$Res, SearchRepoState>;
   @useResult
-  $Res call({List<GithubRepo> items, bool hasNext, int page});
+  $Res call({GithubRepositories items, bool hasNext, int page});
+
+  $GithubRepositoriesCopyWith<$Res> get items;
 }
 
 /// @nodoc
@@ -55,7 +57,7 @@ class _$SearchRepoStateCopyWithImpl<$Res, $Val extends SearchRepoState>
       items: null == items
           ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
-              as List<GithubRepo>,
+              as GithubRepositories,
       hasNext: null == hasNext
           ? _value.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable
@@ -65,6 +67,14 @@ class _$SearchRepoStateCopyWithImpl<$Res, $Val extends SearchRepoState>
           : page // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $GithubRepositoriesCopyWith<$Res> get items {
+    return $GithubRepositoriesCopyWith<$Res>(_value.items, (value) {
+      return _then(_value.copyWith(items: value) as $Val);
+    });
   }
 }
 
@@ -76,7 +86,10 @@ abstract class _$$_SearchRepoStateCopyWith<$Res>
       __$$_SearchRepoStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<GithubRepo> items, bool hasNext, int page});
+  $Res call({GithubRepositories items, bool hasNext, int page});
+
+  @override
+  $GithubRepositoriesCopyWith<$Res> get items;
 }
 
 /// @nodoc
@@ -96,9 +109,9 @@ class __$$_SearchRepoStateCopyWithImpl<$Res>
   }) {
     return _then(_$_SearchRepoState(
       items: null == items
-          ? _value._items
+          ? _value.items
           : items // ignore: cast_nullable_to_non_nullable
-              as List<GithubRepo>,
+              as GithubRepositories,
       hasNext: null == hasNext
           ? _value.hasNext
           : hasNext // ignore: cast_nullable_to_non_nullable
@@ -115,20 +128,13 @@ class __$$_SearchRepoStateCopyWithImpl<$Res>
 
 class _$_SearchRepoState implements _SearchRepoState {
   const _$_SearchRepoState(
-      {final List<GithubRepo> items = const [],
+      {this.items = const GithubRepositories(),
       this.hasNext = true,
-      this.page = 1})
-      : _items = items;
+      this.page = 1});
 
-  final List<GithubRepo> _items;
   @override
   @JsonKey()
-  List<GithubRepo> get items {
-    if (_items is EqualUnmodifiableListView) return _items;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_items);
-  }
-
+  final GithubRepositories items;
   @override
   @JsonKey()
   final bool hasNext;
@@ -146,14 +152,13 @@ class _$_SearchRepoState implements _SearchRepoState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SearchRepoState &&
-            const DeepCollectionEquality().equals(other._items, _items) &&
+            (identical(other.items, items) || other.items == items) &&
             (identical(other.hasNext, hasNext) || other.hasNext == hasNext) &&
             (identical(other.page, page) || other.page == page));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_items), hasNext, page);
+  int get hashCode => Object.hash(runtimeType, items, hasNext, page);
 
   @JsonKey(ignore: true)
   @override
@@ -164,12 +169,12 @@ class _$_SearchRepoState implements _SearchRepoState {
 
 abstract class _SearchRepoState implements SearchRepoState {
   const factory _SearchRepoState(
-      {final List<GithubRepo> items,
+      {final GithubRepositories items,
       final bool hasNext,
       final int page}) = _$_SearchRepoState;
 
   @override
-  List<GithubRepo> get items;
+  GithubRepositories get items;
   @override
   bool get hasNext;
   @override

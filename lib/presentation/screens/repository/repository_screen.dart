@@ -20,7 +20,8 @@ class RepositoryScreen extends ConsumerWidget {
     final repository = ref.watch(
       searchRepoProvider.select((value) {
         return value.whenData(
-          (value) => value.items.firstWhere((element) => element.id == id),
+          (value) =>
+              value.items.value.firstWhere((element) => element.id == id),
         );
       }),
     ).value!;

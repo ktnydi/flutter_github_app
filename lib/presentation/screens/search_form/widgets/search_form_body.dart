@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
+import 'package:github_app/extensions/number.dart';
 import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
 import 'package:github_app/presentation/screens/repository/repository_screen.dart';
 import 'package:github_app/presentation/widgets/repository_tile.dart';
@@ -32,7 +33,7 @@ class SearchFormBody extends ConsumerWidget {
 
     return searchResult.when(
       data: (data) {
-        if (data.items.isEmpty) {
+        if (data.items.value.isEmpty) {
           return SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -66,8 +67,8 @@ class SearchFormBody extends ConsumerWidget {
                 SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      if (index != data.items.length) {
-                        final repository = data.items[index];
+                      if (index != data.items.value.length) {
+                        final repository = data.items.value[index];
 
                         return Column(
                           mainAxisSize: MainAxisSize.min,
@@ -103,7 +104,7 @@ class SearchFormBody extends ConsumerWidget {
                             : const SizedBox(),
                       );
                     },
-                    childCount: data.items.length + 1,
+                    childCount: data.items.value.length + 1,
                   ),
                 ),
               ],
@@ -123,7 +124,7 @@ class SearchFormBody extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
-                    '`${sortKeyState.label}`順で表示中',
+                    '${sortKeyState.label}順 | ${data.items.totalCount.format()}件',
                     style: context.textTheme.bodyMedium!.copyWith(
                       color: context.colorScheme.onInverseSurface,
                     ),
