@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:github_app/model/repositories/user_repository.dart';
+import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
 import 'package:github_app/presentation/screens/home/home_screen.dart';
 
 class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
@@ -9,7 +9,7 @@ class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider).value;
+    final user = ref.watch(authenticatorProvider);
 
     return AppBar(
       actions: [
@@ -39,7 +39,7 @@ class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-          ),
+          )
       ],
     );
   }

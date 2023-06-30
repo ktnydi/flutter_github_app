@@ -1,24 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../provider/shared_preferences_provider.dart';
 
 final signInWithGithub = Provider(_SignInWithGithub.new);
 
 class _SignInWithGithub {
   _SignInWithGithub(this._ref);
 
+  // ignore: unused_field
   final Ref _ref;
   final _appAuth = const FlutterAppAuth();
   final _dio = Dio();
 
-  SharedPreferences get _prefs => _ref.read(sharedPreferencesProvider);
-
   /// Githubサインイン
   /// https://docs.github.com/ja/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#web-application-flow
-  Future<void> call() async {
+  Future<String?> call() async {
     const clientId = String.fromEnvironment('clientId');
     const clientSecret = String.fromEnvironment('clientSecret');
 
@@ -45,7 +41,7 @@ class _SignInWithGithub {
       rethrow;
     }
 
-    if (authorizationResult == null) return;
+    if (authorizationResult == null) return null;
 
     /// 認可コードを認可サーバーに渡してアクセストークンを取得する。
     final result = await _dio.postUri(
@@ -67,6 +63,6 @@ class _SignInWithGithub {
 
     final accessToken = result.data['access_token'] as String;
 
-    await _prefs.setString('accessToken', accessToken);
+    return accessToken;
   }
 }
