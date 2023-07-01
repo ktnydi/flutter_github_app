@@ -8,6 +8,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_appauth: ^4.2.1+1
   dio: ^5.1.1
@@ -18,7 +20,7 @@ dependencies:
   json_annotation: ^4.8.0
   cached_network_image: ^3.2.3
   url_launcher: ^6.1.10
-  intl: ^0.18.0
+  intl: ^0.17.0
   infinite_scroll_pagination: ^3.2.0
 
 dev_dependencies:
