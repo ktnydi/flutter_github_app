@@ -11,7 +11,7 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authenticatorProvider);
+    final user = ref.watch(authenticatorProvider).value;
     final userNotifier = ref.watch(authenticatorProvider.notifier);
 
     Future<void> logout() async {

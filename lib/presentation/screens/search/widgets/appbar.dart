@@ -9,7 +9,7 @@ class SearchAppBar extends ConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(authenticatorProvider);
+    final user = ref.watch(authenticatorProvider).value;
 
     return AppBar(
       actions: [

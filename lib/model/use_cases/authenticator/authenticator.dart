@@ -6,12 +6,25 @@ import 'package:github_app/provider/shared_preferences_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final authenticatorProvider =
-    StateNotifierProvider<AuthenticatorNotifier, User?>((ref) {
+    StateNotifierProvider<AuthenticatorNotifier, AsyncValue<User?>>((ref) {
   return AuthenticatorNotifier(ref);
 });
 
-class AuthenticatorNotifier extends StateNotifier<User?> {
-  AuthenticatorNotifier(this.ref) : super(null);
+class AuthenticatorNotifier extends StateNotifier<AsyncValue<User?>> {
+  AuthenticatorNotifier(this.ref) : super(const AsyncValue.loading()) {
+    final accessToken = _prefs.getString('accessToken');
+
+    if (accessToken == null) {
+      state = const AsyncValue.data(null);
+      return;
+    }
+
+    Future(() async {
+      state = await AsyncValue.guard(() async {
+        return _fetchUser(accessToken);
+      });
+    });
+  }
 
   final Ref ref;
   final _dio = Dio();
@@ -25,6 +38,19 @@ class AuthenticatorNotifier extends StateNotifier<User?> {
     // 端末にアクセストークンを保存する。
     await _prefs.setString('accessToken', accessToken);
 
+    Future(() async {
+      state = await AsyncValue.guard(() async {
+        return _fetchUser(accessToken);
+      });
+    });
+  }
+
+  Future<void> signOut() async {
+    await _prefs.remove('accessToken');
+    state = const AsyncValue.data(null);
+  }
+
+  Future<User> _fetchUser(String accessToken) async {
     // アクセストークンを使ってGitHubのユーザー情報を取得する。
     final response = await _dio.getUri<Map<String, dynamic>>(
       Uri.https(
@@ -39,11 +65,6 @@ class AuthenticatorNotifier extends StateNotifier<User?> {
       ),
     );
 
-    state = User.fromJson(response.data!);
-  }
-
-  Future<void> signOut() async {
-    await _prefs.remove('accessToken');
-    state = null;
+    return User.fromJson(response.data!);
   }
 }
