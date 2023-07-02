@@ -17,7 +17,8 @@ class HomeScreen extends ConsumerWidget {
     Future<void> logout() async {
       final result = await showOkCancelAlertDialog(
         context: context,
-        title: 'サインアウトしますか？',
+        title: 'サインアウト',
+        message: 'サインアウトしますか？',
       );
 
       if (result == OkCancelResult.cancel) return;
