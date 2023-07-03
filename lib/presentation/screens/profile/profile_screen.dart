@@ -6,8 +6,8 @@ import 'package:github_app/presentation/screens/search/search_screen.dart';
 import 'package:github_app/presentation/screens/user_repository_list/user_repository_list_screen.dart';
 import 'widgets/user_profile.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+class ProfileScreen extends ConsumerWidget {
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
