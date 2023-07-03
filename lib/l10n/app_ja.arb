@@ -1,0 +1,10 @@
+{
+  "themeModeLabel": "{value, select, system{システム} light{ライト} dark{ダーク} other{}}",
+  "@themeModeLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  }
+}

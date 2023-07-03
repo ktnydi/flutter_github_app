@@ -6,6 +6,7 @@ import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
 import 'package:github_app/presentation/screens/search/search_screen.dart';
 import 'package:github_app/presentation/screens/user_repository_list/user_repository_list_screen.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'widgets/user_profile.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -126,7 +127,7 @@ class ProfileScreen extends ConsumerWidget {
                     actions: ThemeMode.values.map((e) {
                       return SheetAction(
                         key: e,
-                        label: e.name,
+                        label: L10n.of(context)!.themeModeLabel(e.name),
                       );
                     }).toList(),
                   );
@@ -153,7 +154,7 @@ class ProfileScreen extends ConsumerWidget {
                       child: Text('外観'),
                     ),
                     Text(
-                      themeModeState.name,
+                      L10n.of(context)!.themeModeLabel(themeModeState.name),
                       style: context.textTheme.titleMedium!.copyWith(
                         fontWeight: FontWeight.normal,
                       ),

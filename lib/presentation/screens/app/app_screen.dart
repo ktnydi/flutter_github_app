@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
+import 'package:flutter_gen/gen_l10n/l10n.dart';
 
 import '../splash/splash_screen.dart';
 
@@ -13,14 +13,8 @@ class MyApp extends ConsumerWidget {
     final themeModeState = ref.watch(themeModeNotifierProvider);
     return MaterialApp(
       title: 'Flutter Demo',
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ja'),
-      ],
+      localizationsDelegates: L10n.localizationsDelegates,
+      supportedLocales: L10n.supportedLocales,
       themeMode: themeModeState,
       theme: ThemeData.from(
         useMaterial3: true,
