@@ -14,6 +14,7 @@ class SearchScreenBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncUser = ref.watch(authenticatorProvider);
     final userNotifier = ref.watch(authenticatorProvider.notifier);
+    final isDark = context.colorScheme.brightness == Brightness.dark;
 
     Future<void> signIn() async {
       try {
@@ -49,7 +50,9 @@ class SearchScreenBody extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                'assets/github-mark.png',
+                isDark
+                    ? 'assets/github-mark-white.png'
+                    : 'assets/github-mark.png',
                 width: 140,
               ),
               const SizedBox(height: 8),
@@ -89,12 +92,14 @@ class SearchScreenBody extends ConsumerWidget {
                 FilledButton.tonalIcon(
                   onPressed: signIn,
                   style: FilledButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
+                    backgroundColor: isDark ? Colors.white : Colors.black,
+                    foregroundColor: isDark ? Colors.black : Colors.white,
                     minimumSize: const Size(280, 56),
                   ),
                   icon: Image.asset(
-                    'assets/github-mark-white.png',
+                    isDark
+                        ? 'assets/github-mark.png'
+                        : 'assets/github-mark-white.png',
                     width: 24,
                     filterQuality: FilterQuality.medium,
                   ),
