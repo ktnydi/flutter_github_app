@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
+import 'package:github_app/model/use_cases/search_repo/search_repo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/header.dart';

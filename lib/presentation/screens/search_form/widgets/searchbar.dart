@@ -2,7 +2,7 @@ import 'package:adaptive_dialog/adaptive_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
-import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
+import 'package:github_app/model/use_cases/search_repo/search_repo.dart';
 
 final _searchbarController = Provider.autoDispose((ref) {
   final controller = TextEditingController();

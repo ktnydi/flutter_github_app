@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/extensions/number.dart';
-import 'package:github_app/model/use_cases/profile_repo/search_repo/search_repo.dart';
+import 'package:github_app/model/use_cases/search_repo/search_repo.dart';
 import 'package:github_app/presentation/screens/repository/repository_screen.dart';
 import 'package:github_app/presentation/widgets/repository_tile.dart';
 
