@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/model/repositories/profile_repo_repository.dart';
+import 'package:github_app/presentation/widgets/shimmer/shimmer_list_loading.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -123,6 +124,9 @@ class UserRepositoryListScreen extends ConsumerWidget {
                 textAlign: TextAlign.center,
               ),
             );
+          },
+          firstPageProgressIndicatorBuilder: (context) {
+            return const ShimmerListLoading();
           },
           firstPageErrorIndicatorBuilder: (context) {
             return Container(
