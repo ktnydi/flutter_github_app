@@ -5,7 +5,6 @@ import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
 import 'package:github_app/presentation/screens/search/search_screen.dart';
-import 'package:github_app/presentation/screens/user_repository_list/user_repository_list_screen.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
 import 'widgets/user_profile.dart';
 
@@ -68,58 +67,6 @@ class ProfileScreen extends ConsumerWidget {
                 endIndent: 16,
               ),
               const SizedBox(height: 12),
-              ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserRepositoryListScreen(
-                        repositoryType: SegmentAction.public,
-                      ),
-                    ),
-                  );
-                },
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.book_outlined,
-                    color: Colors.white,
-                  ),
-                ),
-                title: const Text('リポジトリ'),
-                trailing: const Icon(Icons.navigate_next),
-              ),
-              ListTile(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const UserRepositoryListScreen(
-                        repositoryType: SegmentAction.star,
-                      ),
-                    ),
-                  );
-                },
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.star_outline,
-                    color: Colors.white,
-                  ),
-                ),
-                title: const Text('スター'),
-                trailing: const Icon(Icons.navigate_next),
-              ),
               ListTile(
                 onTap: () async {
                   final result = await showModalActionSheet(

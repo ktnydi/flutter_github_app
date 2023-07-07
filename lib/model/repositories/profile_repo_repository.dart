@@ -19,68 +19,6 @@ class ProfileRepoRepository {
   final String accessToken;
   final _dio = Dio();
 
-  Future<List<GithubRepo>> fetchProfileRepositories({
-    required int page,
-    required int perPage,
-  }) async {
-    final response = await _dio.getUri<List<dynamic>>(
-      Uri.https(
-        'api.github.com',
-        '/user/repos',
-        {
-          'sort': 'pushed',
-          'page': '$page',
-          'per_page': '$perPage',
-        },
-      ),
-      options: Options(
-        headers: {
-          'Accept': 'aplication/vnd.github+json',
-          'Authorization': 'Bearer $accessToken',
-          'X-Github-Api-Version': '2022-11-28',
-        },
-      ),
-    );
-
-    final jsonMap = response.data;
-
-    if (jsonMap == null) return [];
-
-    final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
-    return repositories.toList();
-  }
-
-  Future<List<GithubRepo>> fetchStarredRepositories({
-    required int page,
-    required int perPage,
-  }) async {
-    final response = await _dio.getUri<List<dynamic>>(
-      Uri.https(
-        'api.github.com',
-        '/user/starred',
-        {
-          'sort': 'created',
-          'page': '$page',
-          'per_page': '$perPage',
-        },
-      ),
-      options: Options(
-        headers: {
-          'Accept': 'aplication/vnd.github+json',
-          'Authorization': 'Bearer $accessToken',
-          'X-Github-Api-Version': '2022-11-28',
-        },
-      ),
-    );
-
-    final jsonMap = response.data;
-
-    if (jsonMap == null) return [];
-
-    final repositories = jsonMap.map((json) => GithubRepo.fromJson(json));
-    return repositories.toList();
-  }
-
   Future<GithubRepositories> searchRepositories({
     required String query,
     int page = 1,
