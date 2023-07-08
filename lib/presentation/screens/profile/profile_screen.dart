@@ -1,8 +1,10 @@
 import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
+import 'package:github_app/model/use_cases/show_material_grid.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
 import 'package:github_app/presentation/screens/search/search_screen.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
@@ -110,6 +112,29 @@ class ProfileScreen extends ConsumerWidget {
                 ),
                 trailing: const Icon(Icons.navigate_next),
               ),
+              if (kDebugMode)
+                ListTile(
+                  onTap: () async {},
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Icon(
+                      Icons.grid_on,
+                      color: Colors.white,
+                    ),
+                  ),
+                  title: const Text('Debug Show Material Grid'),
+                  trailing: Switch(
+                    value: ref.watch(isOnMaterialGridProvider),
+                    onChanged: (value) {
+                      ref.read(isOnMaterialGridProvider.notifier).state = value;
+                    },
+                  ),
+                ),
             ],
           ),
         ),
