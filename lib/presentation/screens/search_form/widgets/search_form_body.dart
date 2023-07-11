@@ -137,14 +137,27 @@ class SearchFormBody extends ConsumerWidget {
         );
       },
       error: (error, stack) {
-        return Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Icon(Icons.error_outline),
-              SizedBox(height: 16),
-              Text('エラーが発生しました。'),
-            ],
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'おっと!',
+                    style: context.textTheme.headlineLarge!.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'リクエストしたデータが存在しない、またはリソースへのアクセス権限がないためエラーが発生しました。キーワードを変更してもう一度やり直してください。',
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
           ),
         );
       },
