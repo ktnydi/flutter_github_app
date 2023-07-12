@@ -17,11 +17,19 @@ final _searchbarController = Provider.autoDispose((ref) {
 final _focusNode = Provider.autoDispose((ref) {
   final focusNode = FocusNode();
 
+  focusNode.addListener(() {
+    ref.read(_hasFocusProvider.notifier).state = focusNode.hasFocus;
+  });
+
   ref.onDispose(() {
     focusNode.dispose();
   });
 
   return focusNode;
+});
+
+final _hasFocusProvider = StateProvider.autoDispose((ref) {
+  return false;
 });
 
 class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
@@ -34,6 +42,7 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
     final queryNotifier = ref.watch(searchRepoQueryProvider.notifier);
     final searchController = ref.watch(_searchbarController);
     final focusNode = ref.watch(_focusNode);
+    final hasFocus = ref.watch(_hasFocusProvider);
     final sortKeyNotifier = ref.watch(searchSortKeyProvider.notifier);
 
     return Material(
@@ -55,7 +64,6 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
               ),
               Expanded(
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Expanded(
                       child: TextFormField(
@@ -72,7 +80,7 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
                           border: OutlineInputBorder(
                             borderSide: BorderSide.none,
                           ),
-                          contentPadding: EdgeInsets.fromLTRB(0, 16, 0, 8),
+                          contentPadding: EdgeInsets.fromLTRB(0, 12, 0, 4),
                           isDense: true,
                           hintText: 'Github内のリポジトリを検索',
                         ),
@@ -95,31 +103,32 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
                             searchController.clear();
                             focusNode.requestFocus();
                           },
+                          visualDensity: VisualDensity.compact,
                           icon: const Icon(Icons.clear),
                         );
                       },
                     ),
-                    IconButton(
-                      onPressed: () async {
-                        final result = await showModalActionSheet(
-                          context: context,
-                          title: 'ソート方法',
-                          actions: SortKey.values.map((e) {
-                            return SheetAction(
-                              key: e,
-                              label: e.label,
-                            );
-                          }).toList(),
-                        );
-
-                        if (result == null) return;
-
-                        sortKeyNotifier.state = result;
-                      },
-                      icon: const Icon(Icons.sort_outlined),
-                    ),
                   ],
                 ),
+              ),
+              IconButton(
+                onPressed: () async {
+                  final result = await showModalActionSheet(
+                    context: context,
+                    title: 'ソート方法',
+                    actions: SortKey.values.map((e) {
+                      return SheetAction(
+                        key: e,
+                        label: e.label,
+                      );
+                    }).toList(),
+                  );
+
+                  if (result == null) return;
+
+                  sortKeyNotifier.state = result;
+                },
+                icon: const Icon(Icons.sort_outlined),
               ),
             ],
           ),
