@@ -17,19 +17,11 @@ final _searchbarController = Provider.autoDispose((ref) {
 final _focusNode = Provider.autoDispose((ref) {
   final focusNode = FocusNode();
 
-  focusNode.addListener(() {
-    ref.read(_hasFocusProvider.notifier).state = focusNode.hasFocus;
-  });
-
   ref.onDispose(() {
     focusNode.dispose();
   });
 
   return focusNode;
-});
-
-final _hasFocusProvider = StateProvider.autoDispose((ref) {
-  return false;
 });
 
 class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
@@ -42,7 +34,6 @@ class Searchbar extends ConsumerWidget implements PreferredSizeWidget {
     final queryNotifier = ref.watch(searchRepoQueryProvider.notifier);
     final searchController = ref.watch(_searchbarController);
     final focusNode = ref.watch(_focusNode);
-    final hasFocus = ref.watch(_hasFocusProvider);
     final sortKeyNotifier = ref.watch(searchSortKeyProvider.notifier);
 
     return Material(
