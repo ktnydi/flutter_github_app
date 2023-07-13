@@ -20,7 +20,7 @@ class Header extends ConsumerWidget {
           Material(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(
-                repository.owner.isOrganization ? 24 : 1000,
+                repository.owner.isOrganization ? 16 : 1000,
               ),
               side: BorderSide(
                 width: 1,
