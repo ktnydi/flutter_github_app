@@ -4,8 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
-import 'package:github_app/presentation/screens/search/search_screen.dart';
-import 'package:github_app/presentation/screens/search_form/search_form_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class SearchScreenBody extends ConsumerWidget {
   const SearchScreenBody({super.key});
@@ -23,12 +22,7 @@ class SearchScreenBody extends ConsumerWidget {
         // ignore: use_build_context_synchronously
         if (!context.mounted) return;
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const SearchRepositoriesScreen(),
-          ),
-        );
+        context.go('/');
       } on PlatformException catch (error, stack) {
         debugPrintStack(
           stackTrace: stack,
@@ -70,16 +64,7 @@ class SearchScreenBody extends ConsumerWidget {
               if (user != null)
                 FilledButton.tonalIcon(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) {
-                          return const SearchFormScreen();
-                        },
-                        transitionDuration: Duration.zero,
-                        reverseTransitionDuration: Duration.zero,
-                      ),
-                    );
+                    context.go('/search');
                   },
                   style: FilledButton.styleFrom(
                     backgroundColor: context.colorScheme.surfaceVariant,

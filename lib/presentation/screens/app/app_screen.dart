@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/model/use_cases/show_material_grid.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
-
-import '../splash/splash_screen.dart';
+import 'package:github_app/presentation/router.dart';
 
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
@@ -13,7 +12,8 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeModeState = ref.watch(themeModeNotifierProvider);
     final isOnMaterialGrid = ref.watch(isOnMaterialGridProvider);
-    return MaterialApp(
+
+    return MaterialApp.router(
       title: 'Flutter Demo',
       localizationsDelegates: L10n.localizationsDelegates,
       supportedLocales: L10n.supportedLocales,
@@ -32,7 +32,7 @@ class MyApp extends ConsumerWidget {
           seedColor: Colors.blue,
         ),
       ),
-      home: const SplashScreen(),
+      routerConfig: router,
     );
   }
 }

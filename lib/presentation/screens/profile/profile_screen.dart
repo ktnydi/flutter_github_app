@@ -6,8 +6,8 @@ import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/model/use_cases/authenticator/authenticator.dart';
 import 'package:github_app/model/use_cases/show_material_grid.dart';
 import 'package:github_app/model/use_cases/theme_mode.dart';
-import 'package:github_app/presentation/screens/search/search_screen.dart';
 import 'package:flutter_gen/gen_l10n/l10n.dart';
+import 'package:go_router/go_router.dart';
 import 'widgets/user_profile.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -34,13 +34,7 @@ class ProfileScreen extends ConsumerWidget {
       // ignore: use_build_context_synchronously
       if (!context.mounted) return;
 
-      await Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const SearchRepositoriesScreen(),
-        ),
-        (route) => false,
-      );
+      context.go('/');
     }
 
     return Scaffold(

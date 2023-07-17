@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:github_app/extensions/build_context.dart';
 import 'package:github_app/extensions/number.dart';
 import 'package:github_app/model/use_cases/search_repo/search_repo.dart';
-import 'package:github_app/presentation/screens/repository/repository_screen.dart';
 import 'package:github_app/presentation/widgets/shimmer/shimmer_list_loading.dart';
 import 'package:github_app/presentation/widgets/repository_tile.dart';
+import 'package:go_router/go_router.dart';
 
 final scrollController = Provider((ref) {
   final controller = ScrollController();
@@ -82,13 +82,8 @@ class SearchFormBody extends ConsumerWidget {
                               ),
                             RepositoryTile(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => RepositoryScreen(
-                                      id: repository.id,
-                                    ),
-                                  ),
+                                context.go(
+                                  '/search/${repository.id}',
                                 );
                               },
                               repository: repository,
