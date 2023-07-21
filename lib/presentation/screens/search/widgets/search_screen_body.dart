@@ -44,10 +44,9 @@ class SearchScreenBody extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-                isDark
-                    ? 'assets/github-mark-white.png'
-                    : 'assets/github-mark.png',
-                width: 140,
+                'assets/octocat.png',
+                width: 300,
+                filterQuality: FilterQuality.medium,
               ),
               const SizedBox(height: 8),
               Text(

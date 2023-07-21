@@ -36,5 +36,4 @@ flutter:
   uses-material-design: true
   generate: true
   assets:
-    - assets/github-mark-white.png
-    - assets/github-mark.png
+    - assets/octocat.png
